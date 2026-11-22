@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAT POLRI 2027-2028 | 100 Soal Real Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+  :root {
+    --biru-polri: #1a3a6b; --biru-tua: #0d2447; --kuning-polri: #f5c518;
+    --hijau-soal: #28a745; --merah-soal: #dc3545; --abu-bg: #e8ecf1;
+    --putih: #ffffff; --border: #ced4da; --text-dark: #212529; --text-muted: #6c757d;
+  }
+  body { background: var(--abu-bg); color: var(--text-dark); min-height: 100vh; }
+  
+  /* HEADER */
+  .header-cat {
+    background: linear-gradient(180deg, var(--biru-polri) 0%, var(--biru-tua) 100%);
+    color: white; padding: 0 20px; height: 70px; display: flex; align-items: center;
+    justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 15px; }
+  .header-logo { width: 48px; height: 48px; object-fit: contain; background: white; border-radius: 8px; padding: 4px; }
+  .header-title h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+  .header-title p { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 20px; }
+  .peserta-info { text-align: right; font-size: 12px; }
+  .peserta-info .nama { font-weight: 700; font-size: 14px; }
+  .peserta-info .no { opacity: 0.8; }
+  .timer-box { background: rgba(0,0,0,0.3); padding: 8px 18px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+  .timer-label { font-size: 10px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+  .timer-value { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .timer-value.warning { color: #ffc107; }
+  .timer-value.danger { color: #ff6b6b; animation: blink 1s infinite; }
+  @keyframes blink { 50% { opacity: 0.5; } }
+  
+  /* LAYOUT */
+  .main-wrapper { display: flex; max-width: 1400px; margin: 0 auto; padding: 20px; gap: 20px; min-height: calc(100vh - 70px); }
+  .panel-kiri { width: 300px; flex-shrink: 0; }
+  .nav-card { background: var(--putih); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; position: sticky; top: 90px; }
+  .nav-header { background: var(--biru-polri); color: white; padding: 12px 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+  .nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 12px; max-height: 60vh; overflow-y: auto; }
+  .nav-btn { aspect-ratio: 1; border: 2px solid var(--border); background: var(--putih); border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
+  .nav-btn:hover { border-color: var(--biru-polri); color: var(--biru-polri); }
+  .nav-btn.answered { background: var(--hijau-soal); border-color: var(--hijau-soal); color: white; }
+  .nav-btn.current { background: var(--biru-polri); border-color: var(--biru-polri); color: white; box-shadow: 0 0 0 3px rgba(26,58,107,0.3); }
+  .nav-btn.answered.current { background: var(--biru-polri); border-color: var(--kuning-polri); }
+  .nav-legend { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; font-size: 11px; color: var(--text-muted); }
+  .legend-row { display: flex; align-items: center; gap: 8px; }
+  .legend-box { width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--border); background: white; flex-shrink: 0; }
+  .legend-box.answered { background: var(--hijau-soal); border-color: var(--hijau-soal); }
+  .legend-box.current { background: var(--biru-polri); border-color: var(--biru-polri); }
+  
+  /* SOAL */
+  .panel-tengah { flex: 1; min-width: 0; }
+  .soal-card { background: var(--putih); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow: hidden; }
+  .soal-header { background: var(--abu-bg); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+  .soal-badge { background: var(--biru-polri); color: white; padding: 6px 16px; border-radius: 4px; font-size: 13px; font-weight: 700; }
+  .soal-kategori { font-size: 11px; color: var(--text-muted); background: white; padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border); font-weight: 600; }
+  .soal-body { padding: 24px 28px; }
+  .soal-pertanyaan { font-size: 15px; line-height: 1.7; margin-bottom: 24px; color: var(--text-dark); }
+  .opsi-list { display: flex; flex-direction: column; gap: 10px; }
+  .opsi-item { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.15s; background: var(--putih); }
+  .opsi-item:hover { border-color: var(--biru-polri); background: #f8f9fa; }
+  .opsi-item.selected { border-color: var(--biru-polri); background: #e7f1ff; }
+  .opsi-letter { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: var(--abu-bg); border-radius: 50%; font-weight: 700; font-size: 13px; flex-shrink: 0; color: var(--text-muted); transition: all 0.15s; }
+  .opsi-item.selected .opsi-letter { background: var(--biru-polri); color: white; }
+  .opsi-text { font-size: 14px; line-height: 1.5; padding-top: 4px; }
+  
+  /* FOOTER SOAL */
+  .soal-footer { padding: 16px 20px; background: #f8f9fa; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .btn { padding: 10px 24px; border: none; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-outline { background: white; border: 2px solid var(--border); color: var(--text-dark); }
+  .btn-outline:hover:not(:disabled) { border-color: var(--biru-polri); color: var(--biru-polri); }
+  .btn-primary { background: var(--biru-polri); color: white; }
+  .btn-primary:hover:not(:disabled) { background: var(--biru-tua); }
+  .btn-success { background: var(--hijau-soal); color: white; }
+  .btn-success:hover:not(:disabled) { background: #218838; }
+  .btn-danger { background: var(--merah-soal); color: white; }
+  .btn-danger:hover:not(:disabled) { background: #c82333; }
+  .btn-simpan { background: var(--biru-polri); color: white; padding: 12px 40px; font-size: 14px; }
+  .btn-simpan:hover:not(:disabled) { background: var(--biru-tua); }
+  
+  /* START SCREEN */
+  .start-screen { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 70px); padding: 20px; }
+  .start-card { background: var(--putih); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); max-width: 600px; width: 100%; overflow: hidden; text-align: center; }
+  .start-header { background: linear-gradient(180deg, var(--biru-polri), var(--biru-tua)); padding: 40px 30px; color: white; }
+  .start-logo { width: 90px; height: 90px; object-fit: contain; background: white; border-radius: 50%; padding: 10px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+  .start-header h2 { font-size: 20px; margin-bottom: 5px; }
+  .start-header p { font-size: 13px; opacity: 0.85; }
+  .start-body { padding: 30px; }
+  .info-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; }
+  .info-item { background: var(--abu-bg); padding: 16px; border-radius: 8px; text-align: center; }
+  .info-item .val { font-size: 24px; font-weight: 800; color: var(--biru-polri); }
+  .info-item .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .start-note { font-size: 12px; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px; text-align: left; background: #fff8e1; padding: 15px; border-radius: 8px; border-left: 4px solid var(--kuning-polri); }
+  
+  /* HASIL SCREEN */
+  .hasil-screen { display: none; max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hasil-screen.active { display: block; }
+  .hasil-card { background: var(--putih); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; }
+  .hasil-header { background: linear-gradient(180deg, var(--biru-polri), var(--biru-tua)); color: white; padding: 35px 30px; text-align: center; }
+  .hasil-score { font-size: 64px; font-weight: 900; line-height: 1; margin-bottom: 10px; }
+  .hasil-status { font-size: 18px; font-weight: 700; padding: 8px 24px; border-radius: 30px; display: inline-block; }
+  .status-lulus { background: rgba(40,167,69,0.9); color: white; }
+  .status-gagal { background: rgba(220,53,69,0.9); color: white; }
+  .hasil-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); }
+  .stat-item { background: var(--putih); padding: 20px; text-align: center; }
+  .stat-item .num { font-size: 28px; font-weight: 800; }
+  .stat-item .lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 4px; }
+  .stat-item.benar .num { color: var(--hijau-soal); }
+  .stat-item.salah .num { color: var(--merah-soal); }
+  .stat-item.kosong .num { color: #ffc107; }
+  .review-section { background: var(--putih); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); padding: 25px; }
+  .review-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--abu-bg); color: var(--biru-polri); }
+  .review-item { border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--border); }
+  .review-item.correct { border-left-color: var(--hijau-soal); }
+  .review-item.wrong { border-left-color: var(--merah-soal); }
+  .review-item.empty { border-left-color: #ffc107; }
+  .review-q { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .review-status-badge { font-size: 10px; padding: 3px 10px; border-radius: 10px; font-weight: 700; display: inline-block; margin-left: 8px; }
+  .badge-correct { background: #d4edda; color: #155724; }
+  .badge-wrong { background: #f8d7da; color: #721c24; }
+  .badge-empty { background: #fff3cd; color: #856404; }
+  .review-text { font-size: 13px; line-height: 1.5; margin-bottom: 8px; color: #333; }
+  .review-ans { font-size: 12px; padding: 8px 12px; border-radius: 6px; margin-top: 6px; }
+  .review-ans.user { background: #fff3cd; color: #856404; }
+  .review-ans.correct-ans { background: #d4edda; color: #155724; }
+  .review-ans.explain { background: #e7f1ff; color: #0d2447; font-style: italic; }
+  .hidden { display: none !important; }
+  
+  @media (max-width: 900px) {
+    .main-wrapper { flex-direction: column; }
+    .panel-kiri { width: 100%; }
+    .nav-card { position: relative; top: 0; }
+    .nav-grid { grid-template-columns: repeat(10, 1fr); max-height: none; }
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
+    .hasil-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .header-cat { height: auto; padding: 10px 15px; flex-wrap: wrap; gap: 8px; }
+    .header-right { width: 100%; justify-content: space-between; }
+    .nav-grid { grid-template-columns: repeat(5, 1fr); }
+    .soal-body { padding: 16px; }
+    .hasil-score { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header-cat" id="mainHeader">
+  <div class="header-left">
+    <img src="logo-polri.png" alt="Logo Polri" class="header-logo" onerror="this.style.display='none'">
+    <div class="header-title">
+      <h1>COMPUTER ASSISTED TEST (CAT)</h1>
+      <p>Seleksi Penerimaan Anggota POLRI 2027-2028</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="peserta-info">
+      <div class="nama">PESERTA SIMULASI</div>
+      <div class="no">No. Peserta: 2027-001</div>
+    </div>
+    <div class="timer-box">
+      <div class="timer-label">Sisa Waktu</div>
+      <div class="timer-value" id="timerDisplay">90:00</div>
+    </div>
+  </div>
+</header>
+
+<div class="start-screen" id="startScreen">
+  <div class="start-card">
+    <div class="start-header">
+      <img src="logo-polri.png" alt="Logo Polri" class="start-logo" onerror="this.style.display='none'">
+      <h2>SIMULASI CAT POLRI</h2>
+      <p>Periode Seleksi 2027-2028 • Level: Real Test</p>
+    </div>
+    <div class="start-body">
+      <div class="info-grid">
+        <div class="info-item"><div class="val">100</div><div class="lbl">Soal</div></div>
+        <div class="info-item"><div class="val">90</div><div class="lbl">Menit</div></div>
+        <div class="info-item"><div class="val">100</div><div class="lbl">Skor Maks</div></div>
+        <div class="info-item"><div class="val">5</div><div class="lbl">Kategori</div></div>
+      </div>
+      <div class="start-note">
+        <strong>⚠️ Perhatian:</strong> Tes ini menggunakan sistem CAT dengan <strong>100 soal</strong> mencakup TWK, TIU, TKW, Psikotes, dan Kepribadian. Waktu <strong>90 menit</strong> berjalan otomatis. Soal dapat dikerjakan tidak berurutan. Gunakan panel navigasi kiri untuk berpindah soal. Pastikan koneksi stabil dan jangan me-refresh halaman.
+      </div>
+      <button class="btn btn-primary btn-simpan" onclick="mulaiTes()" style="width:100%;justify-content:center;">🚀 MULAI UJIAN</button>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrapper hidden" id="quizScreen">
+  <div class="panel-kiri">
+    <div class="nav-card">
+      <div class="nav-header">📋 NAVIGASI SOAL</div>
+      <div class="nav-grid" id="navGrid"></div>
+      <div class="nav-legend">
+        <div class="legend-row"><div class="legend-box answered"></div> Sudah dijawab</div>
+        <div class="legend-row"><div class="legend-box current"></div> Soal aktif</div>
+        <div class="legend-row"><div class="legend-box"></div> Belum dijawab</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-tengah">
+    <div class="soal-card">
+      <div class="soal-header">
+        <span class="soal-badge" id="soalBadge">SOAL 1</span>
+        <span class="soal-kategori" id="soalKategori">Kategori</span>
+      </div>
+      <div class="soal-body" id="soalBody"></div>
+      <div class="soal-footer">
+        <button class="btn btn-outline" id="btnPrev" onclick="soalSebelumnya()">← Sebelumnya</button>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-simpan" id="btnSimpan" onclick="simpanJawaban()">💾 Simpan & Lanjutkan</button>
+          <button class="btn btn-danger hidden" id="btnSelesai" onclick="selesaikanUjian()">✓ Selesaikan Ujian</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hasil-screen" id="hasilScreen">
+  <div class="hasil-card">
+    <div class="hasil-header">
+      <div class="hasil-score" id="hasilSkor">0</div>
+      <div class="hasil-status" id="hasilStatus">-</div>
+    </div>
+    <div class="hasil-stats">
+      <div class="stat-item benar"><div class="num" id="statBenar">0</div><div class="lbl">Benar</div></div>
+      <div class="stat-item salah"><div class="num" id="statSalah">0</div><div class="lbl">Salah</div></div>
+      <div class="stat-item kosong"><div class="num" id="statKosong">0</div><div class="lbl">Kosong</div></div>
+      <div class="stat-item"><div class="num" id="statNilai">0</div><div class="lbl">Nilai Akhir</div></div>
+    </div>
+  </div>
+  <div class="review-section">
+    <div class="review-title">📋 PEMBAHASAN JAWABAN (100 SOAL)</div>
+    <div id="reviewContainer"></div>
+  </div>
+  <div style="text-align:center;margin:20px 0;">
+    <button class="btn btn-primary" onclick="ulangiTes()" style="padding:12px 40px;">🔄 Ulangi Tes</button>
+  </div>
+</div>
+
+<script>
+// ==================== BANK SOAL 100 ====================
+const bankSoal = [
+  // ===== TWK: WAWASAN KEBANGSAAN (1-20) =====
+  { cat: "TWK", q: "Pancasila sebagai dasar negara Indonesia disahkan pada tanggal...", opt: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "22 Juni 1945"], ans: 1, exp: "Pancasila disahkan sebagai dasar negara pada 18 Agustus 1945 oleh PPKI bersamaan dengan UUD 1945." },
+  { cat: "TWK", q: "Bhinneka Tunggal Ika memiliki arti...", opt: ["Berbeda tetapi sama", "Berbeda-beda tetapi tetap satu", "Satu untuk semua", "Bersatu kita kuat"], ans: 1, exp: "Bhinneka Tunggal Ika berarti 'berbeda-beda tetapi tetap satu jua', semboyan persatuan Indonesia." },
+  { cat: "TWK", q: "Lembaga yang bertugas menjaga keamanan dan ketertiban masyarakat adalah...", opt: ["TNI", "POLRI", "BIN", "KPK"], ans: 1, exp: "POLRI bertugas menjaga keamanan dan ketertiban masyarakat sesuai UU No. 2 Tahun 2002." },
+  { cat: "TWK", q: "Sila ke-3 Pancasila berbunyi...", opt: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Keadilan sosial bagi seluruh rakyat Indonesia"], ans: 2, exp: "Sila ke-3 Pancasila adalah 'Persatuan Indonesia'." },
+  { cat: "TWK", q: "UUD 1945 disahkan pada tanggal...", opt: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "1 Oktober 1945"], ans: 1, exp: "UUD 1945 disahkan oleh PPKI pada 18 Agustus 1945, sehari setelah proklamasi kemerdekaan." },
+  { cat: "TWK", q: "Motto POLRI adalah...", opt: ["Jalesveva Jayamahe", "Rastra Sewakottama", "Bhinneka Tunggal Ika", "Kartika Eka Paksi"], ans: 1, exp: "Motto POLRI adalah 'Rastra Sewakottama' yang berarti 'abdi utama bagi nusa dan bangsa'." },
+  { cat: "TWK", q: "Hari Lahir POLRI diperingati setiap tanggal...", opt: ["1 Juli", "1 Juni", "17 Agustus", "28 Oktober"], ans: 0, exp: "Hari Bhayangkara (Hari Lahir POLRI) diperingati setiap 1 Juli." },
+  { cat: "TWK", q: "Lambang negara Indonesia adalah...", opt: ["Garuda Pancasila", "Bhinneka Tunggal Ika", "Merah Putih", "Monas"], ans: 0, exp: "Lambang negara Indonesia adalah Garuda Pancasila dengan semboyan Bhinneka Tunggal Ika." },
+  { cat: "TWK", q: "Semboyan negara Indonesia adalah...", opt: ["Garuda Pancasila", "Bhinneka Tunggal Ika", "Jalesveva Jayamahe", "Tut Wuri Handayani"], ans: 1, exp: "Semboyan negara Indonesia adalah Bhinneka Tunggal Ika." },
+  { cat: "TWK", q: "Pancasila disahkan oleh...", opt: ["BPUPKI", "PPKI", "KNIP", "MPR"], ans: 1, exp: "Pancasila disahkan oleh PPKI (Panitia Persiapan Kemerdekaan Indonesia) pada 18 Agustus 1945." },
+  { cat: "TWK", q: "Sila ke-1 Pancasila berbunyi...", opt: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Keadilan sosial bagi seluruh rakyat Indonesia"], ans: 0, exp: "Sila ke-1 Pancasila adalah 'Ketuhanan Yang Maha Esa'." },
+  { cat: "TWK", q: "Sila ke-2 Pancasila berbunyi...", opt: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Keadilan sosial bagi seluruh rakyat Indonesia"], ans: 1, exp: "Sila ke-2 Pancasila adalah 'Kemanusiaan yang adil dan beradab'." },
+  { cat: "TWK", q: "Sila ke-4 Pancasila berbunyi...", opt: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan"], ans: 3, exp: "Sila ke-4 Pancasila adalah 'Kerakyatan yang dipimpin oleh hikmat kebijaksanaan dalam permusyawaratan/perwakilan'." },
+  { cat: "TWK", q: "Sila ke-5 Pancasila berbunyi...", opt: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Keadilan sosial bagi seluruh rakyat Indonesia"], ans: 3, exp: "Sila ke-5 Pancasila adalah 'Keadilan sosial bagi seluruh rakyat Indonesia'." },
+  { cat: "TWK", q: "Bendera Indonesia berwarna...", opt: ["Merah-Putih", "Merah-Biru", "Putih-Merah", "Merah-Kuning"], ans: 0, exp: "Bendera Indonesia adalah Sang Saka Merah Putih, dengan merah di atas dan putih di bawah." },
+  { cat: "TWK", q: "Lagu kebangsaan Indonesia adalah...", opt: ["Indonesia Raya", "Garuda Pancasila", "Tanah Airku", "Bagimu Negeri"], ans: 0, exp: "Lagu kebangsaan Indonesia adalah Indonesia Raya, ciptaan WR Supratman." },
+  { cat: "TWK", q: "Proklamasi Kemerdekaan Indonesia dibacakan pada tanggal...", opt: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "28 Oktober 1928"], ans: 0, exp: "Proklamasi Kemerdekaan Indonesia dibacakan pada 17 Agustus 1945 oleh Soekarno-Hatta." },
+  { cat: "TWK", q: "Sumpah Pemuda dideklarasikan pada tanggal...", opt: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "28 Oktober 1928"], ans: 3, exp: "Sumpah Pemuda dideklarasikan pada 28 Oktober 1928." },
+  { cat: "TWK", q: "Lembaga yang mengawasi jalannya pemerintahan adalah...", opt: ["DPR", "BPK", "MA", "KY"], ans: 0, exp: "DPR (Dewan Perwakilan Rakyat) mengawasi jalannya pemerintahan." },
+  { cat: "TWK", q: "Motto TNI AD adalah...", opt: ["Jalesveva Jayamahe", "Rastra Sewakottama", "Kartika Eka Paksi", "Swa Bhuwana Paksa"], ans: 2, exp: "Motto TNI AD adalah 'Kartika Eka Paksi'." },
+
+  // ===== TIU: MATEMATIKA & LOGIKA (21-50) =====
+  { cat: "TIU", q: "Jika 3x + 5 = 20, maka nilai x adalah...", opt: ["3", "4", "5", "6"], ans: 2, exp: "3x + 5 = 20 → 3x = 15 → x = 5." },
+  { cat: "TIU", q: "Sebuah kereta menempuh jarak 180 km dalam 2 jam. Kecepatan rata-ratanya adalah...", opt: ["60 km/jam", "80 km/jam", "90 km/jam", "120 km/jam"], ans: 2, exp: "Kecepatan = Jarak ÷ Waktu = 180 ÷ 2 = 90 km/jam." },
+  { cat: "TIU", q: "Hasil dari 15% × 240 adalah...", opt: ["24", "30", "36", "40"], ans: 2, exp: "15% × 240 = 0,15 × 240 = 36." },
+  { cat: "TIU", q: "Jika A = 1, B = 2, C = 3, maka nilai D + F adalah...", opt: ["8", "9", "10", "11"], ans: 2, exp: "D = 4, F = 6, maka D + F = 4 + 6 = 10." },
+  { cat: "TIU", q: "Luas lingkaran dengan jari-jari 7 cm adalah... (π = 22/7)", opt: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"], ans: 0, exp: "Luas = π × r² = 22/7 × 49 = 154 cm²." },
+  { cat: "TIU", q: "Perbandingan 2 : 5 jika jumlahnya 35, maka nilai bagian terkecil adalah...", opt: ["10", "12", "14", "15"], ans: 0, exp: "Bagian terkecil = 2/(2+5) × 35 = 2/7 × 35 = 10." },
+  { cat: "TIU", q: "Hasil dari 2³ + 3² adalah...", opt: ["15", "16", "17", "18"], ans: 2, exp: "2³ = 8, 3² = 9, maka 8 + 9 = 17." },
+  { cat: "TIU", q: "Sebuah persegi panjang memiliki panjang 12 cm dan lebar 8 cm. Luasnya adalah...", opt: ["86 cm²", "96 cm²", "106 cm²", "116 cm²"], ans: 1, exp: "Luas = panjang × lebar = 12 × 8 = 96 cm²." },
+  { cat: "TIU", q: "Rata-rata dari 5, 7, 9, 11, 13 adalah...", opt: ["8", "9", "10", "11"], ans: 1, exp: "Rata-rata = (5+7+9+11+13)/5 = 45/5 = 9." },
+  { cat: "TIU", q: "Jika 1/3 dari suatu bilangan adalah 12, maka bilangan tersebut adalah...", opt: ["24", "30", "36", "42"], ans: 2, exp: "1/3 × x = 12 → x = 12 × 3 = 36." },
+  { cat: "TIU", q: "Hasil dari 5! (5 faktorial) adalah...", opt: ["60", "100", "120", "150"], ans: 2, exp: "5! = 5×4×3×2×1 = 120." },
+  { cat: "TIU", q: "Jika x² = 49, maka nilai x adalah...", opt: ["5 atau -5", "6 atau -6", "7 atau -7", "8 atau -8"], ans: 2, exp: "x² = 49 → x = 7 atau x = -7." },
+  { cat: "TIU", q: "Sebuah kubus memiliki rusuk 5 cm. Volumenya adalah...", opt: ["100 cm³", "125 cm³", "150 cm³", "175 cm³"], ans: 1, exp: "Volume kubus = rusuk³ = 5³ = 125 cm³." },
+  { cat: "TIU", q: "Jika 2x - 3 = 7, maka nilai x adalah...", opt: ["3", "4", "5", "6"], ans: 2, exp: "2x - 3 = 7 → 2x = 10 → x = 5." },
+  { cat: "TIU", q: "Hasil dari 3/4 + 2/5 adalah...", opt: ["5/9", "23/20", "5/20", "6/9"], ans: 1, exp: "3/4 + 2/5 = 15/20 + 8/20 = 23/20." },
+  { cat: "TIU", q: "Sebuah tabung memiliki jari-jari 7 cm dan tinggi 10 cm. Volumenya adalah... (π = 22/7)", opt: ["1.540 cm³", "1.440 cm³", "1.640 cm³", "1.740 cm³"], ans: 0, exp: "Volume tabung = πr²t = 22/7 × 49 × 10 = 1.540 cm³." },
+  { cat: "TIU", q: "Jika 5x = 45, maka nilai x adalah...", opt: ["7", "8", "9", "10"], ans: 2, exp: "5x = 45 → x = 9." },
+  { cat: "TIU", q: "Hasil dari 12 × 15 adalah...", opt: ["160", "170", "180", "190"], ans: 2, exp: "12 × 15 = 180." },
+  { cat: "TIU", q: "Jika a = 4 dan b = 6, maka nilai a² + b² adalah...", opt: ["36", "52", "58", "64"], ans: 1, exp: "a² + b² = 16 + 36 = 52." },
+  { cat: "TIU", q: "Hasil dari 25% dari 80 adalah...", opt: ["15", "20", "25", "30"], ans: 1, exp: "25% × 80 = 0,25 × 80 = 20." },
+  { cat: "TIU", q: "Sebuah segitiga memiliki alas 10 cm dan tinggi 6 cm. Luasnya adalah...", opt: ["30 cm²", "40 cm²", "50 cm²", "60 cm²"], ans: 0, exp: "Luas segitiga = 1/2 × alas × tinggi = 1/2 × 10 × 6 = 30 cm²." },
+  { cat: "TIU", q: "Lanjutkan pola berikut: 2, 4, 8, 16, ...", opt: ["20", "24", "32", "36"], ans: 2, exp: "Pola dikali 2: 2→4→8→16→32." },
+  { cat: "TIU", q: "Lanjutkan pola: 1, 4, 9, 16, ...", opt: ["20", "25", "30", "36"], ans: 1, exp: "Pola bilangan kuadrat: 1², 2², 3², 4², 5² = 25." },
+  { cat: "TIU", q: "Lanjutkan pola: 3, 6, 12, 24, ...", opt: ["36", "42", "48", "54"], ans: 2, exp: "Pola dikali 2: 3→6→12→24→48." },
+  { cat: "TIU", q: "Lanjutkan pola: A, C, E, G, ...", opt: ["H", "I", "J", "K"], ans: 1, exp: "Pola huruf melompati satu: A→C→E→G→I." },
+  { cat: "TIU", q: "Jika hari ini Senin, maka 100 hari lagi adalah hari...", opt: ["Rabu", "Kamis", "Jumat", "Sabtu"], ans: 0, exp: "100 ÷ 7 = 14 sisa 2. Senin + 2 hari = Rabu." },
+  { cat: "TIU", q: "Semua polisi adalah abdi negara. Budi adalah polisi. Maka...", opt: ["Budi bukan abdi negara", "Budi adalah abdi negara", "Budi mungkin abdi negara", "Tidak dapat disimpulkan"], ans: 1, exp: "Silogisme: Semua polisi = abdi negara. Budi = polisi. Maka Budi = abdi negara." },
+  { cat: "TIU", q: "Manakah yang TIDAK sekelompok?", opt: ["Merah", "Biru", "Hijau", "Mobil"], ans: 3, exp: "Merah, Biru, dan Hijau adalah warna. Mobil adalah kendaraan." },
+  { cat: "TIU", q: "Manakah yang TIDAK sekelompok?", opt: ["Ayam", "Bebek", "Kambing", "Ikan"], ans: 3, exp: "Ayam, Bebek, Kambing adalah hewan darat. Ikan adalah hewan air." },
+  { cat: "TIU", q: "Manakah yang TIDAK sekelompok?", opt: ["Mawar", "Melati", "Anggrek", "Beringin"], ans: 3, exp: "Mawar, Melati, Anggrek adalah bunga. Beringin adalah pohon." },
+  { cat: "TIU", q: "Manakah yang TIDAK sekelompok?", opt: ["Gitar", "Piano", "Drum", "Kursi"], ans: 3, exp: "Gitar, Piano, Drum adalah alat musik. Kursi adalah perabot." },
+  { cat: "TIU", q: "Jika 7x + 3 = 24, maka nilai x adalah...", opt: ["2", "3", "4", "5"], ans: 1, exp: "7x + 3 = 24 → 7x = 21 → x = 3." },
+  { cat: "TIU", q: "Hasil dari 144 ÷ 12 adalah...", opt: ["10", "11", "12", "13"], ans: 2, exp: "144 ÷ 12 = 12." },
+  { cat: "TIU", q: "Jika x = 3, maka nilai 2x² + 1 adalah...", opt: ["17", "18", "19", "20"], ans: 2, exp: "2(3)² + 1 = 2(9) + 1 = 18 + 1 = 19." },
+  { cat: "TIU", q: "Hasil dari 0,5 × 0,4 adalah...", opt: ["0,1", "0,2", "0,3", "0,4"], ans: 1, exp: "0,5 × 0,4 = 0,2." },
+  { cat: "TIU", q: "Sebuah mobil menempuh 240 km dalam 3 jam. Kecepatannya adalah...", opt: ["60 km/jam", "70 km/jam", "80 km/jam", "90 km/jam"], ans: 2, exp: "Kecepatan = 240 ÷ 3 = 80 km/jam." },
+  { cat: "TIU", q: "Jika 2/3 dari x adalah 18, maka x adalah...", opt: ["24", "27", "30", "33"], ans: 1, exp: "2/3 × x = 18 → x = 18 × 3/2 = 27." },
+  { cat: "TIU", q: "Hasil dari 8² - 6² adalah...", opt: ["24", "26", "28", "30"], ans: 2, exp: "8² - 6² = 64 - 36 = 28." },
+  { cat: "TIU", q: "Lanjutkan pola: 2, 6, 12, 20, ...", opt: ["28", "30", "32", "34"], ans: 1, exp: "Pola selisih bertambah 2: +4, +6, +8, +10 → 20 + 10 = 30." },
+  { cat: "TIU", q: "Jika 4x = 2y dan y = 6, maka nilai x adalah...", opt: ["2", "3", "4", "5"], ans: 1, exp: "4x = 2(6) = 12 → x = 3." },
+
+  // ===== TKW: BAHASA INDONESIA (51-70) =====
+  { cat: "TKW", q: "Sinonim dari kata 'KOMPETEN' adalah...", opt: ["Lemah", "Cakap", "Ragu", "Biasa"], ans: 1, exp: "Kompeten berarti cakap, mampu, atau memiliki kemampuan dalam bidang tertentu." },
+  { cat: "TKW", q: "Antonim dari kata 'OPTIMIS' adalah...", opt: ["Yakin", "Pesimis", "Semangat", "Percaya"], ans: 1, exp: "Optimis berarti yakin akan keberhasilan. Antonimnya adalah pesimis (tidak yakin)." },
+  { cat: "TKW", q: "Kalimat yang menggunakan ejaan yang benar adalah...", opt: ["Saya pergi ke pasar membeli apel.", "saya pergi ke Pasar membeli Apel.", "Saya pergi ke Pasar membeli apel.", "saya Pergi ke pasar membeli apel."], ans: 0, exp: "Kalimat yang benar menggunakan huruf kapital di awal kalimat dan nama tempat umum (pasar) ditulis kecil." },
+  { cat: "TKW", q: "Kata 'BUKU' termasuk jenis kata...", opt: ["Kata kerja", "Kata benda", "Kata sifat", "Kata keterangan"], ans: 1, exp: "Buku adalah kata benda (nomina) karena menyatakan benda." },
+  { cat: "TKW", q: "Penulisan kata baku yang benar adalah...", opt: ["Aktifitas", "Aktivitas", "Aktiviti", "Aktipitas"], ans: 1, exp: "Kata baku yang benar menurut KBBI adalah 'aktivitas'." },
+  { cat: "TKW", q: "Sinonim dari kata 'GIGIH' adalah...", opt: ["Malas", "Tekun", "Ragu", "Lembut"], ans: 1, exp: "Gigih berarti tekun, tidak mudah menyerah dalam mencapai tujuan." },
+  { cat: "TKW", q: "Kalimat 'Dia adalah siswa yang rajin.' Termasuk kalimat...", opt: ["Tanya", "Perintah", "Berita", "Seru"], ans: 2, exp: "Kalimat tersebut adalah kalimat berita (deklaratif) yang menyatakan informasi." },
+  { cat: "TKW", q: "Penulisan gelar yang benar adalah...", opt: ["Dr. Budi, S.H.", "dr. Budi, SH", "DR. Budi, S.H.", "Dr. Budi SH."], ans: 0, exp: "Penulisan gelar yang benar: Dr. Budi, S.H. (gelar sarjana hukum setelah nama dengan titik)." },
+  { cat: "TKW", q: "Kata 'MELATI' merujuk pada...", opt: ["Nama bunga", "Nama buah", "Nama hewan", "Nama tempat"], ans: 0, exp: "Melati adalah nama bunga yang harum." },
+  { cat: "TKW", q: "Antonim dari kata 'TINGGI' adalah...", opt: ["Besar", "Rendah", "Panjang", "Luas"], ans: 1, exp: "Antonim (lawan kata) dari tinggi adalah rendah." },
+  { cat: "TKW", q: "Kata 'MANDIRI' bersinonim dengan...", opt: ["Bergantung", "Berdikari", "Manja", "Lemah"], ans: 1, exp: "Mandiri bersinonim dengan berdikari (berdiri di atas kaki sendiri)." },
+  { cat: "TKW", q: "Antonim dari kata 'ABADI' adalah...", opt: ["Kekal", "Sementara", "Lestari", "Tetap"], ans: 1, exp: "Abadi berarti kekal. Antonimnya adalah sementara." },
+  { cat: "TKW", q: "Kata 'PELAJAR' termasuk jenis kata...", opt: ["Kata kerja", "Kata benda", "Kata sifat", "Kata keterangan"], ans: 1, exp: "Pelajar adalah kata benda (nomina) karena menyatakan orang/benda." },
+  { cat: "TKW", q: "Penulisan kata baku yang benar adalah...", opt: ["Analisa", "Analisis", "Analisys", "Analisah"], ans: 1, exp: "Kata baku yang benar menurut KBBI adalah 'analisis'." },
+  { cat: "TKW", q: "Sinonim dari kata 'CERDAS' adalah...", opt: ["Bodoh", "Pandai", "Malas", "Lambat"], ans: 1, exp: "Cerdas bersinonim dengan pandai, pintar, atau cerdik." },
+  { cat: "TKW", q: "Kalimat 'Tolong tutup pintu itu!' Termasuk kalimat...", opt: ["Tanya", "Perintah", "Berita", "Seru"], ans: 1, exp: "Kalimat tersebut adalah kalimat perintah (imperatif)." },
+  { cat: "TKW", q: "Antonim dari kata 'KUAT' adalah...", opt: ["Kokoh", "Lemah", "Teguh", "Keras"], ans: 1, exp: "Antonim dari kuat adalah lemah." },
+  { cat: "TKW", q: "Kata 'CANTIK' termasuk jenis kata...", opt: ["Kata kerja", "Kata benda", "Kata sifat", "Kata keterangan"], ans: 2, exp: "Cantik adalah kata sifat (adjektiva) karena menyatakan sifat." },
+  { cat: "TKW", q: "Penulisan kata baku yang benar adalah...", opt: ["Praktek", "Praktik", "Praktiek", "Praktek"], ans: 1, exp: "Kata baku yang benar menurut KBBI adalah 'praktik'." },
+  { cat: "TKW", q: "Sinonim dari kata 'INDAH' adalah...", opt: ["Buruk", "Cantik", "Jelek", "Kotor"], ans: 1, exp: "Indah bersinonim dengan cantik, elok, atau molek." },
+
+  // ===== PSIKOTES (71-90) =====
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Merah", "Biru", "Hijau", "Mobil"], ans: 3, exp: "Merah, Biru, dan Hijau adalah warna. Mobil adalah kendaraan." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 2, 4, 8, 16, ...", opt: ["20", "24", "32", "36"], ans: 2, exp: "Pola dikali 2: 2→4→8→16→32." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Ayam", "Bebek", "Kambing", "Ikan"], ans: 3, exp: "Ayam, Bebek, Kambing adalah hewan darat. Ikan adalah hewan air." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 1, 4, 9, 16, ...", opt: ["20", "25", "30", "36"], ans: 1, exp: "Pola bilangan kuadrat: 1², 2², 3², 4², 5² = 25." },
+  { cat: "Psikotes", q: "Semua polisi adalah abdi negara. Budi adalah polisi. Maka...", opt: ["Budi bukan abdi negara", "Budi adalah abdi negara", "Budi mungkin abdi negara", "Tidak dapat disimpulkan"], ans: 1, exp: "Silogisme: Semua polisi = abdi negara. Budi = polisi. Maka Budi = abdi negara." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Mawar", "Melati", "Anggrek", "Beringin"], ans: 3, exp: "Mawar, Melati, Anggrek adalah bunga. Beringin adalah pohon." },
+  { cat: "Psikotes", q: "Lanjutkan pola: A, C, E, G, ...", opt: ["H", "I", "J", "K"], ans: 1, exp: "Pola huruf melompati satu: A→C→E→G→I." },
+  { cat: "Psikotes", q: "Jika hari ini Senin, maka 100 hari lagi adalah hari...", opt: ["Rabu", "Kamis", "Jumat", "Sabtu"], ans: 0, exp: "100 ÷ 7 = 14 sisa 2. Senin + 2 hari = Rabu." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Gitar", "Piano", "Drum", "Kursi"], ans: 3, exp: "Gitar, Piano, Drum adalah alat musik. Kursi adalah perabot." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 3, 6, 12, 24, ...", opt: ["36", "42", "48", "54"], ans: 2, exp: "Pola dikali 2: 3→6→12→24→48." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Buku", "Pensil", "Penggaris", "Sepatu"], ans: 3, exp: "Buku, Pensil, Penggaris adalah alat tulis. Sepatu adalah pakaian." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 5, 10, 20, 40, ...", opt: ["60", "70", "80", "90"], ans: 2, exp: "Pola dikali 2: 5→10→20→40→80." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Jakarta", "Bandung", "Surabaya", "Malaysia"], ans: 3, exp: "Jakarta, Bandung, Surabaya adalah kota di Indonesia. Malaysia adalah negara." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 1, 3, 6, 10, ...", opt: ["12", "14", "15", "16"], ans: 2, exp: "Pola selisih bertambah 1: +2, +3, +4, +5 → 10 + 5 = 15." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Mangga", "Jeruk", "Apel", "Wortel"], ans: 3, exp: "Mangga, Jeruk, Apel adalah buah. Wortel adalah sayur." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 2, 5, 10, 17, ...", opt: ["24", "25", "26", "27"], ans: 2, exp: "Pola selisih: +3, +5, +7, +9 → 17 + 9 = 26." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Merpati", "Elang", "Kucing", "Burung"], ans: 2, exp: "Merpati, Elang, Burung adalah jenis burung. Kucing adalah mamalia." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 100, 50, 25, ...", opt: ["10", "12,5", "15", "20"], ans: 1, exp: "Pola dibagi 2: 100→50→25→12,5." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", opt: ["Baju", "Celana", "Topi", "Meja"], ans: 3, exp: "Baju, Celana, Topi adalah pakaian. Meja adalah perabot." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 1, 1, 2, 3, 5, 8, ...", opt: ["11", "12", "13", "14"], ans: 2, exp: "Pola Fibonacci: 1+1=2, 1+2=3, 2+3=5, 3+5=8, 5+8=13." },
+
+  // ===== KEPRIBADIAN (91-100) =====
+  { cat: "Kepribadian", q: "Sikap yang harus dimiliki calon anggota POLRI adalah...", opt: ["Egois", "Disiplin dan bertanggung jawab", "Mudah menyerah", "Apatis"], ans: 1, exp: "Anggota POLRI harus disiplin, bertanggung jawab, dan berintegritas tinggi." },
+  { cat: "Kepribadian", q: "Jika kamu melihat rekan melanggar aturan, sikap yang tepat adalah...", opt: ["Diamkan saja", "Ikut melanggar", "Mengingatkan dengan baik", "Melaporkan tanpa bukti"], ans: 2, exp: "Sikap yang tepat adalah mengingatkan dengan cara yang baik dan santun." },
+  { cat: "Kepribadian", q: "Nilai yang paling penting dalam pelayanan publik adalah...", opt: ["Keuntungan pribadi", "Integritas dan profesionalisme", "Popularitas", "Kekuasaan"], ans: 1, exp: "Integritas dan profesionalisme adalah nilai utama dalam pelayanan publik." },
+  { cat: "Kepribadian", q: "Ketika menghadapi tekanan dalam tugas, sikap yang tepat adalah...", opt: ["Panik", "Menyalahkan orang lain", "Tenang dan mencari solusi", "Kabur dari tanggung jawab"], ans: 2, exp: "Sikap yang tepat adalah tetap tenang dan mencari solusi terbaik." },
+  { cat: "Kepribadian", q: "Kerja sama tim yang baik memerlukan...", opt: ["Dominasi satu orang", "Komunikasi dan saling percaya", "Persaingan tidak sehat", "Sikap individualis"], ans: 1, exp: "Kerja sama tim yang baik memerlukan komunikasi efektif dan saling percaya." },
+  { cat: "Kepribadian", q: "Sikap profesional seorang POLRI terhadap masyarakat adalah...", opt: ["Arogan", "Ramah dan melayani", "Acuh tak acuh", "Mementingkan diri sendiri"], ans: 1, exp: "POLRI harus ramah, melayani, dan mengayomi masyarakat." },
+  { cat: "Kepribadian", q: "Jika mendapat kritik dari atasan, sebaiknya...", opt: ["Marah", "Menerima dan memperbaiki diri", "Membalas", "Mengabaikan"], ans: 1, exp: "Kritik dari atasan sebaiknya diterima dengan lapang dada dan dijadikan bahan perbaikan." },
+  { cat: "Kepribadian", q: "Integritas seorang anggota POLRI ditunjukkan dengan...", opt: ["Menerima suap", "Jujur dan konsisten", "Memihak satu golongan", "Menyalahgunakan wewenang"], ans: 1, exp: "Integritas ditunjukkan dengan sikap jujur, konsisten, dan tidak menyalahgunakan wewenang." },
+  { cat: "Kepribadian", q: "Tugas utama POLRI menurut UU adalah...", opt: ["Membuat undang-undang", "Memelihara keamanan dan ketertiban", "Mengadili perkara", "Memungut pajak"], ans: 1, exp: "Tugas utama POLRI adalah memelihara keamanan dan ketertiban masyarakat." },
+  { cat: "Kepribadian", q: "Sikap yang harus dihindari seorang calon POLRI adalah...", opt: ["Jujur", "Disiplin", "Korupsi", "Bertanggung jawab"], ans: 2, exp: "Korupsi adalah tindakan yang harus dihindari karena merusak integritas dan kepercayaan publik." }
+];
+
+const huruf = ['A', 'B', 'C', 'D'];
+
+// STATE
+let indeksSekarang = 0;
+let jawabanUser = new Array(bankSoal.length).fill(null);
+let timerInterval = null;
+let sisaWaktu = 90 * 60;
+let ujianSelesai = false;
+
+function mulaiTes() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  buatNavGrid();
+  mulaiTimer();
+  renderSoal();
+}
+
+function mulaiTimer() {
+  timerInterval = setInterval(() => {
+    if (sisaWaktu <= 0) { clearInterval(timerInterval); selesaikanUjian(true); return; }
+    sisaWaktu--;
+    const m = Math.floor(sisaWaktu / 60).toString().padStart(2, '0');
+    const d = (sisaWaktu % 60).toString().padStart(2, '0');
+    const el = document.getElementById('timerDisplay');
+    el.textContent = `${m}:${d}`;
+    el.className = 'timer-value';
+    if (sisaWaktu <= 300) el.classList.add('warning');
+    if (sisaWaktu <= 60) el.classList.add('danger');
+  }, 1000);
+}
+
+function buatNavGrid() {
+  const grid = document.getElementById('navGrid');
+  grid.innerHTML = '';
+  bankSoal.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn';
+    btn.textContent = i + 1;
+    btn.id = `nav-${i}`;
+    btn.onclick = () => lompatSoal(i);
+    grid.appendChild(btn);
+  });
+  updateNavGrid();
+}
+
+function updateNavGrid() {
+  bankSoal.forEach((_, i) => {
+    const btn = document.getElementById(`nav-${i}`);
+    if (!btn) return;
+    btn.className = 'nav-btn';
+    if (jawabanUser[i] !== null) btn.classList.add('answered');
+    if (i === indeksSekarang) btn.classList.add('current');
+  });
+}
+
+function lompatSoal(i) { indeksSekarang = i; renderSoal(); }
+
+function renderSoal() {
+  const q = bankSoal[indeksSekarang];
+  const dipilih = jawabanUser[indeksSekarang];
+  document.getElementById('soalBadge').textContent = `SOAL ${indeksSekarang + 1}`;
+  document.getElementById('soalKategori').textContent = q.cat;
+  let html = `<div class="soal-pertanyaan">${q.q}</div><div class="opsi-list">`;
+  q.opt.forEach((opt, i) => {
+    const sel = dipilih === i ? 'selected' : '';
+    html += `<div class="opsi-item ${sel}" onclick="pilihOpsi(${i})"><div class="opsi-letter">${huruf[i]}</div><div class="opsi-text">${opt}</div></div>`;
+  });
+  html += '</div>';
+  document.getElementById('soalBody').innerHTML = html;
+  document.getElementById('btnPrev').disabled = indeksSekarang === 0;
+  const terakhir = indeksSekarang === bankSoal.length - 1;
+  document.getElementById('btnSimpan').classList.toggle('hidden', terakhir);
+  document.getElementById('btnSelesai').classList.toggle('hidden', !terakhir);
+  updateNavGrid();
+}
+
+function pilihOpsi(i) { if (ujianSelesai) return; jawabanUser[indeksSekarang] = i; renderSoal(); }
+function simpanJawaban() { if (indeksSekarang < bankSoal.length - 1) { indeksSekarang++; renderSoal(); } }
+function soalSebelumnya() { if (indeksSekarang > 0) { indeksSekarang--; renderSoal(); } }
+
+function selesaikanUjian(auto = false) {
+  if (ujianSelesai) return;
+  const kosong = jawabanUser.filter(a => a === null).length;
+  if (!auto && kosong > 0) { if (!confirm(`⚠️ Masih ada ${kosong} soal belum dijawab. Yakin ingin menyelesaikan ujian?`)) return; }
+  ujianSelesai = true;
+  clearInterval(timerInterval);
+  tampilkanHasil();
+}
+
+function tampilkanHasil() {
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('hasilScreen').classList.add('active');
+  document.getElementById('mainHeader').style.display = 'none';
+  let benar = 0, salah = 0, kosong = 0;
+  bankSoal.forEach((q, i) => {
+    if (jawabanUser[i] === null) kosong++;
+    else if (jawabanUser[i] === q.ans) benar++;
+    else salah++;
+  });
+  const skor = Math.round((benar / bankSoal.length) * 100);
+  document.getElementById('hasilSkor').textContent = skor;
+  document.getElementById('statBenar').textContent = benar;
+  document.getElementById('statSalah').textContent = salah;
+  document.getElementById('statKosong').textContent = kosong;
+  document.getElementById('statNilai').textContent = skor;
+  const statusEl = document.getElementById('hasilStatus');
+  if (skor >= 80) { statusEl.textContent = 'LULUS - SANGAT BAIK'; statusEl.className = 'hasil-status status-lulus'; }
+  else if (skor >= 60) { statusEl.textContent = 'LULUS - CUKUP'; statusEl.className = 'hasil-status status-lulus'; }
+  else { statusEl.textContent = 'BELUM LULUS'; statusEl.className = 'hasil-status status-gagal'; }
+  let revHtml = '';
+  bankSoal.forEach((q, i) => {
+    const ua = jawabanUser[i];
+    let cls, badge, badgeCls;
+    if (ua === null) { cls = 'empty'; badge = 'KOSONG'; badgeCls = 'badge-empty'; }
+    else if (ua === q.ans) { cls = 'correct'; badge = 'BENAR'; badgeCls = 'badge-correct'; }
+    else { cls = 'wrong'; badge = 'SALAH'; badgeCls = 'badge-wrong'; }
+    revHtml += `<div class="review-item ${cls}"><div class="review-q">Soal ${i + 1} • ${q.cat}<span class="review-status-badge ${badgeCls}">${badge}</span></div><div class="review-text">${q.q}</div><div class="review-ans user"><strong>Jawabanmu:</strong> ${ua === null ? 'Tidak dijawab' : huruf[ua] + '. ' + q.opt[ua]}</div><div class="review-ans correct-ans"><strong>Jawaban Benar:</strong> ${huruf[q.ans]}. ${q.opt[q.ans]}</div><div class="review-ans explain"><strong>Pembahasan:</strong> ${q.exp}</div></div>`;
+  });
+  document.getElementById('reviewContainer').innerHTML = revHtml;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function ulangiTes() {
+  indeksSekarang = 0;
+  jawabanUser = new Array(bankSoal.length).fill(null);
+  sisaWaktu = 90 * 60;
+  ujianSelesai = false;
+  clearInterval(timerInterval);
+  document.getElementById('timerDisplay').textContent = '90:00';
+  document.getElementById('timerDisplay').className = 'timer-value';
+  document.getElementById('hasilScreen').classList.remove('active');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('mainHeader').style.display = 'flex';
+  buatNavGrid();
+  mulaiTimer();
+  renderSoal();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
