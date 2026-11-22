@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tes POLRI 2027-2028 | Premium Simulation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+  
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --accent: #f43f5e;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --bg-dark: #0f172a;
+    --bg-card: #1e293b;
+    --bg-card-hover: #334155;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border: #334155;
+    --glow: 0 0 30px rgba(99, 102, 241, 0.4);
+  }
+  
+  body {
+    background: var(--bg-dark);
+    background-image: 
+      radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 100%, rgba(244, 63, 94, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 60%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  
+  /* Animated background particles */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.1), transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(99,102,241,0.3), transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent);
+    background-size: 200px 200px;
+    animation: particles 60s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes particles {
+    from { background-position: 0 0; }
+    to { background-position: 200px 200px; }
+  }
+  
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: rgba(30, 41, 59, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5), var(--glow);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* ============ HEADER ============ */
+  .header {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    padding: 35px 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+  .header-content { position: relative; z-index: 1; }
+  .badge-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .header h1 {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+  .header p { font-size: 15px; opacity: 0.95; }
+  
+  /* ============ CONTENT ============ */
+  .content { padding: 35px; }
+  
+  /* ============ START SCREEN ============ */
+  .hero-title {
+    font-size: 28px;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #6366f1, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-desc {
+    text-align: center;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto 30px;
+    font-size: 15px;
+  }
+  
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  .feature-card {
+    background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.05));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 10px 40px rgba(99,102,241,0.2);
+  }
+  .feature-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .feature-value {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .feature-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  
+  /* ============ BUTTONS ============ */
+  .btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+  }
+  .btn:hover::before { transform: translateX(100%); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(99,102,241,0.4);
+  }
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(99,102,241,0.6);
+  }
+  .btn-secondary {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: #475569;
+    border-color: var(--primary);
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, var(--accent), #e11d48);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(244,63,94,0.4);
+  }
+  .btn-danger:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(244,63,94,0.6);
+  }
+  .btn-start {
+    padding: 18px 60px;
+    font-size: 17px;
+    margin: 0 auto;
+    display: flex;
+  }
+  
+  /* ============ INFO BAR ============ */
+  .info-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .info-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .info-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+  .info-box-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .info-box-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+  }
+  .info-box-value.warning { color: var(--warning); }
+  .info-box-value.danger { color: var(--danger); }
+  
+  /* Timer pulse */
+  .info-box.timer-active .info-box-value {
+    animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  /* ============ PROGRESS ============ */
+  .progress-wrapper {
+    margin-bottom: 25px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .progress-container {
+    width: 100%;
+    height: 10px;
+    background: var(--bg-card);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), #8b5cf6, var(--accent));
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(99,102,241,0.6);
+  }
+  
+  /* ============ QUIZ LAYOUT ============ */
+  .quiz-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 20px;
+  }
+  @media (max-width: 850px) {
+    .quiz-layout { grid-template-columns: 1fr; }
+  }
+  
+  /* ============ SOAL CARD ============ */
+  .soal-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .soal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .soal-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(99,102,241,0.4);
+  }
+  .soal-category {
+    font-size: 11px;
+    background: rgba(99,102,241,0.15);
+    color: var(--primary);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(99,102,241,0.3);
+  }
+  .soal-text {
+    font-size: 17px;
+    line-height: 1.65;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  
+  /* ============ OPTIONS ============ */
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--bg-dark);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    color: var(--text-primary);
+    position: relative;
+    overflow: hidden;
+  }
+  .option::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0;
+    background: linear-gradient(90deg, var(--primary), transparent);
+    transition: width 0.3s;
+    opacity: 0.15;
+  }
+  .option:hover {
+    border-color: var(--primary);
+    transform: translateX(4px);
+  }
+  .option:hover::after { width: 100%; }
+  .option.selected {
+    border-color: var(--primary);
+    background: rgba(99,102,241,0.15);
+    box-shadow: 0 0 20px rgba(99,102,241,0.3);
+  }
+  .option.selected::after { width: 100%; }
+  .option-letter {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-card-hover);
+    border-radius: 10px;
+    font-weight: 800;
+    margin-right: 16px;
+    flex-shrink: 0;
+    font-size: 14px;
+    transition: all 0.2s;
+    border: 1px solid var(--border);
+  }
+  .option.selected .option-letter {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(99,102,241,0.5);
+    transform: scale(1.1);
+  }
+  
+  /* ============ NAVIGATION GRID ============ */
+  .nav-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+  }
+  .nav-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+  .nav-btn {
+    aspect-ratio: 1;
+    border: 1px solid var(--border);
+    background: var(--bg-dark);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-btn:hover {
+    border-color: var(--primary);
+    color: var(--text-primary);
+    transform: scale(1.1);
+  }
+  .nav-btn.answered {
+    background: rgba(16,185,129,0.2);
+    border-color: var(--success);
+    color: var(--success);
+  }
+  .nav-btn.current {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 4px 15px rgba(99,102,241,0.5);
+    transform: scale(1.1);
+  }
+  .nav-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-dot {
+    width: 14px; height: 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .legend-dot.answered { background: rgba(16,185,129,0.3); border-color: var(--success); }
+  .legend-dot.current { background: var(--primary); border-color: var(--primary); }
+  
+  /* ============ BUTTONS GROUP ============ */
+  .btn-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+  }
+  .btn-group .btn { flex: 1; min-width: 120px; }
+  
+  /* ============ RESULT SCREEN ============ */
+  .result-screen { display: none; }
+  .result-screen.active { display: block; animation: fadeIn 0.6s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .score-hero {
+    text-align: center;
+    padding: 45px 25px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(236,72,153,0.1));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(99,102,241,0.3), transparent 60%);
+  }
+  .score-hero > * { position: relative; z-index: 1; }
+  
+  .score-circle {
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) 0deg, var(--bg-card) 0deg);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    position: relative;
+    animation: scoreAnim 1.5s ease-out;
+  }
+  @keyframes scoreAnim {
+    from { transform: scale(0) rotate(-180deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .score-inner {
+    width: 150px; height: 150px;
+    background: var(--bg-card);
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+  }
+  .score-value {
+    font-size: 54px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+  .score-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+  .status-text {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+  .status-desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+  .stat-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 22px;
+    border-radius: 14px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  .stat-box:hover { transform: translateY(-3px); }
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--primary);
+  }
+  .stat-box.green::before { background: var(--success); }
+  .stat-box.red::before { background: var(--danger); }
+  .stat-box.orange::before { background: var(--warning); }
+  .stat-value {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-box.green .stat-value { color: var(--success); }
+  .stat-box.red .stat-value { color: var(--danger); }
+  .stat-box.orange .stat-value { color: var(--warning); }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  
+  /* ============ REVIEW ============ */
+  .review-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin: 25px 0 18px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .review-title::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 4px;
+  }
+  .review-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 8px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { border-color: var(--primary); color: var(--text-primary); }
+  .filter-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+  
+  .review-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--border);
+    animation: fadeIn 0.4s ease;
+    transition: transform 0.2s;
+  }
+  .review-item:hover { transform: translateX(4px); }
+  .review-item.correct-item { border-left-color: var(--success); }
+  .review-item.wrong-item { border-left-color: var(--danger); }
+  .review-item.unanswered-item { border-left-color: var(--warning); }
+  
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .review-qnum {
+    font-weight: 800;
+    color: var(--primary);
+    font-size: 14px;
+  }
+  .review-status {
+    font-size: 11px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .review-status.correct { background: rgba(16,185,129,0.2); color: var(--success); }
+  .review-status.wrong { background: rgba(239,68,68,0.2); color: var(--danger); }
+  .review-status.unanswered { background: rgba(245,158,11,0.2); color: var(--warning); }
+  
+  .review-text {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+  }
+  .review-answer {
+    font-size: 13px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+  .review-answer.user {
+    background: rgba(245,158,11,0.1);
+    color: #fcd34d;
+    border-left: 3px solid var(--warning);
+  }
+  .review-answer.correct-ans {
+    background: rgba(16,185,129,0.1);
+    color: #6ee7b7;
+    border-left: 3px solid var(--success);
+  }
+  .review-answer.explanation {
+    background: rgba(99,102,241,0.1);
+    color: #a5b4fc;
+    border-left: 3px solid var(--primary);
+    font-style: italic;
+  }
+  
+  .hidden { display: none !important; }
+  
+  /* ============ SCROLLBAR ============ */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg-dark); }
+  ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+  
+  /* ============ MOBILE ============ */
+  @media (max-width: 600px) {
+    body { padding: 10px; }
+    .header { padding: 25px 20px; }
+    .header h1 { font-size: 22px; }
+    .content { padding: 20px; }
+    .hero-title { font-size: 22px; }
+    .soal-card { padding: 20px; }
+    .soal-text { font-size: 15px; }
+    .option { padding: 14px; font-size: 14px; }
+    .nav-panel { position: relative; }
+    .score-value { font-size: 42px; }
+    .status-text { font-size: 20px; }
+    .btn-group .btn { min-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-content">
+      <div class="badge-top">⚡ PREMIUM SIMULATION 2027-2028</div>
+      <h1>🏛️ Tes Seleksi POLRI</h1>
+      <p>Simulasi Ujian Akademik & Psikotes Terpadu</p>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- START SCREEN -->
+    <div id="startScreen">
+      <h2 class="hero-title">Selamat Datang, Calon Anggota POLRI! 👮</h2>
+      <p class="hero-desc">
+        Uji kemampuanmu dengan <strong>50 soal</strong> mencakup Tes Akademik, Psikotes, dan Wawasan Kebangsaan. 
+        Sistem akan menghitung skor, nilai akhir, dan menampilkan pembahasan lengkap setiap soal.
+      </p>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="feature-icon">📝</span>
+          <div class="feature-value">50</div>
+          <div class="feature-label">Total Soal</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">⏱️</span>
+          <div class="feature-value">60</div>
+          <div class="feature-label">Menit</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🎯</span>
+          <div class="feature-value">100</div>
+          <div class="feature-label">Skor Maksimal</div>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📊</span>
+          <div class="feature-value">3</div>
+          <div class="feature-label">Kategori Soal</div>
+        </div>
+      </div>
+      
+      <button class="btn btn-danger btn-start" onclick="startTest()">🚀 Mulai Tes Sekarang</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quizScreen" class="hidden">
+      <div class="info-bar">
+        <div class="info-box">
+          <div class="info-box-label">Soal</div>
+          <div class="info-box-value"><span id="currentQ">1</span>/<span id="totalQ">50</span></div>
+        </div>
+        <div class="info-box">
+          <div class="info-box-label">Terjawab</div>
+          <div class="info-box-value" id="answeredCount">0</div>
+        </div>
+        <div class="info-box timer-active" id="timerBox">
+          <div class="info-box-label">Waktu</div>
+          <div class="info-box-value warning" id="timer">60:00</div>
+        </div>
+      </div>
+      
+      <div class="progress-wrapper">
+        <div class="progress-label">
+          <span>Progress Pengerjaan</span>
+          <span id="progressPct">0%</span>
+        </div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="quiz-layout">
+        <div>
+          <div id="soalContainer"></div>
+          <div class="btn-group">
+            <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">← Sebelumnya</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Selanjutnya →</button>
+            <button class="btn btn-danger hidden" id="finishBtn" onclick="finishTest()">✓ Selesai & Lihat Skor</button>
+          </div>
+        </div>
+        
+        <div class="nav-panel">
+          <div class="nav-title">Navigasi Soal</div>
+          <div class="nav-grid" id="navGrid"></div>
+          <div class="nav-legend">
+            <div class="legend-item"><div class="legend-dot answered"></div> Sudah dijawab</div>
+            <div class="legend-item"><div class="legend-dot current"></div> Soal aktif</div>
+            <div class="legend-item"><div class="legend-dot"></div> Belum dijawab</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="resultScreen" class="result-screen">
+      <div class="score-hero">
+        <div class="score-circle" id="scoreCircle">
+          <div class="score-inner">
+            <div class="score-value" id="finalScore">0</div>
+            <div class="score-label">SKOR / 100</div>
+          </div>
+        </div>
+        <div class="status-text" id="statusText">-</div>
+        <div class="status-desc" id="statusDesc">-</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box green">
+          <div class="stat-value" id="benarCount">0</div>
+          <div class="stat-label">✓ Benar</div>
+        </div>
+        <div class="stat-box red">
+          <div class="stat-value" id="salahCount">0</div>
+          <div class="stat-label">✗ Salah</div>
+        </div>
+        <div class="stat-box orange">
+          <div class="stat-value" id="kosongCount">0</div>
+          <div class="stat-label">◯ Kosong</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="nilaiAkhir">0</div>
+          <div class="stat-label">📊 Nilai Akhir</div>
+        </div>
+      </div>
+
+      <h3 class="review-title">📋 Pembahasan Jawaban Lengkap</h3>
+      <div class="review-filters">
+        <button class="filter-btn active" onclick="filterReview('all', this)">Semua</button>
+        <button class="filter-btn" onclick="filterReview('correct', this)">✓ Benar</button>
+        <button class="filter-btn" onclick="filterReview('wrong', this)">✗ Salah</button>
+        <button class="filter-btn" onclick="filterReview('unanswered', this)">◯ Kosong</button>
+      </div>
+      <div id="reviewContainer"></div>
+
+      <div class="btn-group" style="margin-top: 25px;">
+        <button class="btn btn-secondary" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Ke Atas</button>
+        <button class="btn btn-danger" onclick="restartTest()">🔄 Ulangi Tes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== 50 SOAL LENGKAP ==========
+const questions = [
+  // ===== TES WAWASAN KEBANGSAAN (1-10) =====
+  { cat: "Wawasan Kebangsaan", q: "Pancasila sebagai dasar negara Indonesia disahkan pada tanggal...", options: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "22 Juni 1945"], answer: 1, explanation: "Pancasila disahkan sebagai dasar negara pada 18 Agustus 1945 oleh PPKI bersamaan dengan UUD 1945." },
+  { cat: "Wawasan Kebangsaan", q: "Bhinneka Tunggal Ika memiliki arti...", options: ["Berbeda tetapi sama", "Berbeda-beda tetapi tetap satu", "Satu untuk semua", "Bersatu kita kuat"], answer: 1, explanation: "Bhinneka Tunggal Ika berarti 'berbeda-beda tetapi tetap satu jua', semboyan persatuan Indonesia." },
+  { cat: "Wawasan Kebangsaan", q: "Lembaga yang bertugas menjaga keamanan dan ketertiban masyarakat adalah...", options: ["TNI", "POLRI", "BIN", "KPK"], answer: 1, explanation: "POLRI bertugas menjaga keamanan dan ketertiban masyarakat sesuai UU No. 2 Tahun 2002." },
+  { cat: "Wawasan Kebangsaan", q: "Sila ke-3 Pancasila berbunyi...", options: ["Ketuhanan Yang Maha Esa", "Kemanusiaan yang adil dan beradab", "Persatuan Indonesia", "Keadilan sosial bagi seluruh rakyat Indonesia"], answer: 2, explanation: "Sila ke-3 Pancasila adalah 'Persatuan Indonesia'." },
+  { cat: "Wawasan Kebangsaan", q: "UUD 1945 disahkan pada tanggal...", options: ["17 Agustus 1945", "18 Agustus 1945", "1 Juni 1945", "1 Oktober 1945"], answer: 1, explanation: "UUD 1945 disahkan oleh PPKI pada 18 Agustus 1945, sehari setelah proklamasi kemerdekaan." },
+  { cat: "Wawasan Kebangsaan", q: "Motto POLRI adalah...", options: ["Jalesveva Jayamahe", "Rastra Sewakottama", "Bhinneka Tunggal Ika", "Kartika Eka Paksi"], answer: 1, explanation: "Motto POLRI adalah 'Rastra Sewakottama' yang berarti 'abdi utama bagi nusa dan bangsa'." },
+  { cat: "Wawasan Kebangsaan", q: "Bendera Indonesia berwarna...", options: ["Merah-Putih", "Merah-Biru", "Putih-Merah", "Merah-Kuning"], answer: 0, explanation: "Bendera Indonesia adalah Sang Saka Merah Putih, dengan merah di atas dan putih di bawah." },
+  { cat: "Wawasan Kebangsaan", q: "Hari Lahir POLRI diperingati setiap tanggal...", options: ["1 Juli", "1 Juni", "17 Agustus", "28 Oktober"], answer: 0, explanation: "Hari Bhayangkara (Hari Lahir POLRI) diperingati setiap 1 Juli." },
+  { cat: "Wawasan Kebangsaan", q: "Lambang negara Indonesia adalah...", options: ["Garuda Pancasila", "Bhinneka Tunggal Ika", "Merah Putih", "Monas"], answer: 0, explanation: "Lambang negara Indonesia adalah Garuda Pancasila dengan semboyan Bhinneka Tunggal Ika." },
+  { cat: "Wawasan Kebangsaan", q: "Semboyan negara Indonesia adalah...", options: ["Garuda Pancasila", "Bhinneka Tunggal Ika", "Jalesveva Jayamahe", "Tut Wuri Handayani"], answer: 1, explanation: "Semboyan negara Indonesia adalah Bhinneka Tunggal Ika." },
+
+  // ===== TES INTELEGENSIA UMUM - MATEMATIKA (11-20) =====
+  { cat: "Matematika", q: "Jika 3x + 5 = 20, maka nilai x adalah...", options: ["3", "4", "5", "6"], answer: 2, explanation: "3x + 5 = 20 → 3x = 15 → x = 5." },
+  { cat: "Matematika", q: "Sebuah kereta menempuh jarak 180 km dalam 2 jam. Kecepatan rata-ratanya adalah...", options: ["60 km/jam", "80 km/jam", "90 km/jam", "120 km/jam"], answer: 2, explanation: "Kecepatan = Jarak ÷ Waktu = 180 ÷ 2 = 90 km/jam." },
+  { cat: "Matematika", q: "Hasil dari 15% × 240 adalah...", options: ["24", "30", "36", "40"], answer: 2, explanation: "15% × 240 = 0,15 × 240 = 36." },
+  { cat: "Matematika", q: "Jika A = 1, B = 2, C = 3, maka nilai D + F adalah...", options: ["8", "9", "10", "11"], answer: 2, explanation: "D = 4, F = 6, maka D + F = 4 + 6 = 10." },
+  { cat: "Matematika", q: "Luas lingkaran dengan jari-jari 7 cm adalah... (π = 22/7)", options: ["154 cm²", "144 cm²", "164 cm²", "174 cm²"], answer: 0, explanation: "Luas = π × r² = 22/7 × 49 = 154 cm²." },
+  { cat: "Matematika", q: "Perbandingan 2 : 5 jika jumlahnya 35, maka nilai bagian terkecil adalah...", options: ["10", "12", "14", "15"], answer: 0, explanation: "Bagian terkecil = 2/(2+5) × 35 = 2/7 × 35 = 10." },
+  { cat: "Matematika", q: "Hasil dari 2³ + 3² adalah...", options: ["15", "16", "17", "18"], answer: 2, explanation: "2³ = 8, 3² = 9, maka 8 + 9 = 17." },
+  { cat: "Matematika", q: "Sebuah persegi panjang memiliki panjang 12 cm dan lebar 8 cm. Luasnya adalah...", options: ["86 cm²", "96 cm²", "106 cm²", "116 cm²"], answer: 1, explanation: "Luas = panjang × lebar = 12 × 8 = 96 cm²." },
+  { cat: "Matematika", q: "Rata-rata dari 5, 7, 9, 11, 13 adalah...", options: ["8", "9", "10", "11"], answer: 1, explanation: "Rata-rata = (5+7+9+11+13)/5 = 45/5 = 9." },
+  { cat: "Matematika", q: "Jika 1/3 dari suatu bilangan adalah 12, maka bilangan tersebut adalah...", options: ["24", "30", "36", "42"], answer: 2, explanation: "1/3 × x = 12 → x = 12 × 3 = 36." },
+
+  // ===== TES BAHASA INDONESIA (21-30) =====
+  { cat: "Bahasa Indonesia", q: "Sinonim dari kata 'KOMPETEN' adalah...", options: ["Lemah", "Cakap", "Ragu", "Biasa"], answer: 1, explanation: "Kompeten berarti cakap, mampu, atau memiliki kemampuan dalam bidang tertentu." },
+  { cat: "Bahasa Indonesia", q: "Antonim dari kata 'OPTIMIS' adalah...", options: ["Yakin", "Pesimis", "Semangat", "Percaya"], answer: 1, explanation: "Optimis berarti yakin akan keberhasilan. Antonimnya adalah pesimis (tidak yakin)." },
+  { cat: "Bahasa Indonesia", q: "Kalimat yang menggunakan ejaan yang benar adalah...", options: ["Saya pergi ke pasar membeli apel.", "saya pergi ke Pasar membeli Apel.", "Saya pergi ke Pasar membeli apel.", "saya Pergi ke pasar membeli apel."], answer: 0, explanation: "Kalimat yang benar menggunakan huruf kapital di awal kalimat dan nama tempat umum (pasar) ditulis kecil." },
+  { cat: "Bahasa Indonesia", q: "Kata 'BUKU' termasuk jenis kata...", options: ["Kata kerja", "Kata benda", "Kata sifat", "Kata keterangan"], answer: 1, explanation: "Buku adalah kata benda (nomina) karena menyatakan benda." },
+  { cat: "Bahasa Indonesia", q: "Penulisan kata baku yang benar adalah...", options: ["Aktifitas", "Aktivitas", "Aktiviti", "Aktipitas"], answer: 1, explanation: "Kata baku yang benar menurut KBBI adalah 'aktivitas'." },
+  { cat: "Bahasa Indonesia", q: "Sinonim dari kata 'GIGIH' adalah...", options: ["Malas", "Tekun", "Ragu", "Lembut"], answer: 1, explanation: "Gigih berarti tekun, tidak mudah menyerah dalam mencapai tujuan." },
+  { cat: "Bahasa Indonesia", q: "Kalimat 'Dia adalah siswa yang rajin.' Termasuk kalimat...", options: ["Tanya", "Perintah", "Berita", "Seru"], answer: 2, explanation: "Kalimat tersebut adalah kalimat berita (deklaratif) yang menyatakan informasi." },
+  { cat: "Bahasa Indonesia", q: "Penulisan gelar yang benar adalah...", options: ["Dr. Budi, S.H.", "dr. Budi, SH", "DR. Budi, S.H.", "Dr. Budi SH."], answer: 0, explanation: "Penulisan gelar yang benar: Dr. Budi, S.H. (gelar sarjana hukum setelah nama dengan titik)." },
+  { cat: "Bahasa Indonesia", q: "Kata 'MELATI' merujuk pada...", options: ["Nama bunga", "Nama buah", "Nama hewan", "Nama tempat"], answer: 0, explanation: "Melati adalah nama bunga yang harum." },
+  { cat: "Bahasa Indonesia", q: "Antonim dari kata 'TINGGI' adalah...", options: ["Besar", "Rendah", "Panjang", "Luas"], answer: 1, explanation: "Antonim (lawan kata) dari tinggi adalah rendah." },
+
+  // ===== TES PSIKOTES (31-40) =====
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok dengan yang lain?", options: ["Merah", "Biru", "Hijau", "Mobil"], answer: 3, explanation: "Merah, Biru, dan Hijau adalah warna. Mobil adalah kendaraan." },
+  { cat: "Psikotes", q: "Lanjutkan pola berikut: 2, 4, 8, 16, ...", options: ["20", "24", "32", "36"], answer: 2, explanation: "Pola dikali 2: 2→4→8→16→32." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", options: ["Ayam", "Bebek", "Kambing", "Ikan"], answer: 3, explanation: "Ayam, Bebek, Kambing adalah hewan darat. Ikan adalah hewan air." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 1, 4, 9, 16, ...", options: ["20", "25", "30", "36"], answer: 1, explanation: "Pola bilangan kuadrat: 1², 2², 3², 4², 5² = 25." },
+  { cat: "Psikotes", q: "Semua polisi adalah abdi negara. Budi adalah polisi. Maka...", options: ["Budi bukan abdi negara", "Budi adalah abdi negara", "Budi mungkin abdi negara", "Tidak dapat disimpulkan"], answer: 1, explanation: "Silogisme: Semua polisi = abdi negara. Budi = polisi. Maka Budi = abdi negara." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", options: ["Mawar", "Melati", "Anggrek", "Beringin"], answer: 3, explanation: "Mawar, Melati, Anggrek adalah bunga. Beringin adalah pohon." },
+  { cat: "Psikotes", q: "Lanjutkan pola: A, C, E, G, ...", options: ["H", "I", "J", "K"], answer: 1, explanation: "Pola huruf melompati satu: A→C→E→G→I." },
+  { cat: "Psikotes", q: "Jika hari ini Senin, maka 100 hari lagi adalah hari...", options: ["Rabu", "Kamis", "Jumat", "Sabtu"], answer: 0, explanation: "100 ÷ 7 = 14 sisa 2. Senin + 2 hari = Rabu." },
+  { cat: "Psikotes", q: "Manakah yang TIDAK sekelompok?", options: ["Gitar", "Piano", "Drum", "Kursi"], answer: 3, explanation: "Gitar, Piano, Drum adalah alat musik. Kursi adalah perabot." },
+  { cat: "Psikotes", q: "Lanjutkan pola: 3, 6, 12, 24, ...", options: ["36", "42", "48", "54"], answer: 2, explanation: "Pola dikali 2: 3→6→12→24→48." },
+
+  // ===== TES KEPRIBADIAN & WAWASAN (41-50) =====
+  { cat: "Kepribadian", q: "Sikap yang harus dimiliki calon anggota POLRI adalah...", options: ["Egois", "Disiplin dan bertanggung jawab", "Mudah menyerah", "Apatis"], answer: 1, explanation: "Anggota POLRI harus disiplin, bertanggung jawab, dan berintegritas tinggi." },
+  { cat: "Kepribadian", q: "Jika kamu melihat rekan melanggar aturan, sikap yang tepat adalah...", options: ["Diamkan saja", "Ikut melanggar", "Mengingatkan dengan baik", "Melaporkan tanpa bukti"], answer: 2, explanation: "Sikap yang tepat adalah mengingatkan dengan cara yang baik dan santun." },
+  { cat: "Kepribadian", q: "Nilai yang paling penting dalam pelayanan publik adalah...", options: ["Keuntungan pribadi", "Integritas dan profesionalisme", "Popularitas", "Kekuasaan"], answer: 1, explanation: "Integritas dan profesionalisme adalah nilai utama dalam pelayanan publik." },
+  { cat: "Kepribadian", q: "Ketika menghadapi tekanan dalam tugas, sikap yang tepat adalah...", options: ["Panik", "Menyalahkan orang lain", "Tenang dan mencari solusi", "Kabur dari tanggung jawab"], answer: 2, explanation: "Sikap yang tepat adalah tetap tenang dan mencari solusi terbaik." },
+  { cat: "Kepribadian", q: "Kerja sama tim yang baik memerlukan...", options: ["Dominasi satu orang", "Komunikasi dan saling percaya", "Persaingan tidak sehat", "Sikap individualis"], answer: 1, explanation: "Kerja sama tim yang baik memerlukan komunikasi efektif dan saling percaya." },
+  { cat: "Kepribadian", q: "Sikap profesional seorang POLRI terhadap masyarakat adalah...", options: ["Arogan", "Ramah dan melayani", "Acuh tak acuh", "Mementingkan diri sendiri"], answer: 1, explanation: "POLRI harus ramah, melayani, dan mengayomi masyarakat." },
+  { cat: "Kepribadian", q: "Jika mendapat kritik dari atasan, sebaiknya...", options: ["Marah", "Menerima dan memperbaiki diri", "Membalas", "Mengabaikan"], answer: 1, explanation: "Kritik dari atasan sebaiknya diterima dengan lapang dada dan dijadikan bahan perbaikan." },
+  { cat: "Kepribadian", q: "Integritas seorang anggota POLRI ditunjukkan dengan...", options: ["Menerima suap", "Jujur dan konsisten", "Memihak satu golongan", "Menyalahgunakan wewenang"], answer: 1, explanation: "Integritas ditunjukkan dengan sikap jujur, konsisten, dan tidak menyalahgunakan wewenang." },
+  { cat: "Kepribadian", q: "Tugas utama POLRI menurut UU adalah...", options: ["Membuat undang-undang", "Memelihara keamanan dan ketertiban", "Mengadili perkara", "Memungut pajak"], answer: 1, explanation: "Tugas utama POLRI adalah memelihara keamanan dan ketertiban masyarakat." },
+  { cat: "Kepribadian", q: "Sikap yang harus dihindari seorang calon POLRI adalah...", options: ["Jujur", "Disiplin", "Korupsi", "Bertanggung jawab"], answer: 2, explanation: "Korupsi adalah tindakan yang harus dihindari karena merusak integritas dan kepercayaan publik." }
+];
+
+const letters = ['A', 'B', 'C', 'D'];
+
+// ========== STATE ==========
+let currentIndex = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let timerInterval = null;
+let timeLeft = 60 * 60;
+let testFinished = false;
+
+// ========== FUNCTIONS ==========
+function startTest() {
+  document.getElementById('startScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('totalQ').textContent = questions.length;
+  buildNavGrid();
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  timerInterval = setInterval(() => {
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      finishTest(true);
+      return;
+    }
+    timeLeft--;
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    const timerEl = document.getElementById('timer');
+    timerEl.textContent = `${m}:${s}`;
+    
+    // Warning color
+    if (timeLeft <= 300) {
+      timerEl.classList.remove('warning');
+      timerEl.classList.add('danger');
+    }
+  }, 1000);
+}
+
+function buildNavGrid() {
+  const grid = document.getElementById('navGrid');
+  grid.innerHTML = '';
+  questions.forEach((_, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-btn';
+    btn.textContent = i + 1;
+    btn.onclick = () => jumpTo(i);
+    btn.id = `nav-${i}`;
+    grid.appendChild(btn);
+  });
+  updateNavGrid();
+}
+
+function updateNavGrid() {
+  questions.forEach((_, i) => {
+    const btn = document.getElementById(`nav-${i}`);
+    if (!btn) return;
+    btn.className = 'nav-btn';
+    if (userAnswers[i] !== null) btn.classList.add('answered');
+    if (i === currentIndex) btn.classList.add('current');
+  });
+}
+
+function jumpTo(index) {
+  currentIndex = index;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentIndex];
+  const selected = userAnswers[currentIndex];
+  const container = document.getElementById('soalContainer');
+
+  let html = `
+    <div class="soal-card">
+      <div class="soal-header">
+        <span class="soal-number">📝 SOAL ${currentIndex + 1}</span>
+        <span class="soal-category">${q.cat}</span>
+      </div>
+      <div class="soal-text">${q.q}</div>
+      <div class="options">
+  `;
+
+  q.options.forEach((opt, i) => {
+    const selClass = selected === i ? 'selected' : '';
+    html += `
+      <div class="option ${selClass}" onclick="selectAnswer(${i})">
+        <div class="option-letter">${letters[i]}</div>
+        <div>${opt}</div>
+      </div>
+    `;
+  });
+
+  html += `</div></div>`;
+  container.innerHTML = html;
+
+  // Update info
+  document.getElementById('currentQ').textContent = currentIndex + 1;
+  const answered = userAnswers.filter(a => a !== null).length;
+  document.getElementById('answeredCount').textContent = answered;
+  const pct = Math.round((answered / questions.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+
+  // Buttons
+  document.getElementById('prevBtn').disabled = currentIndex === 0;
+  const isLast = currentIndex === questions.length - 1;
+  document.getElementById('nextBtn').classList.toggle('hidden', isLast);
+  document.getElementById('finishBtn').classList.toggle('hidden', !isLast);
+  
+  updateNavGrid();
+}
+
+function selectAnswer(index) {
+  if (testFinished) return;
+  userAnswers[currentIndex] = index;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (currentIndex < questions.length - 1) {
+    currentIndex++;
+    renderQuestion();
+    document.querySelector('.soal-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+    document.querySelector('.soal-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function finishTest(auto = false) {
+  if (testFinished) return;
+  const unanswered = userAnswers.filter(a => a === null).length;
+  if (!auto && unanswered > 0) {
+    if (!confirm(`⚠️ Masih ada ${unanswered} soal belum dijawab. Yakin ingin menyelesaikan tes?`)) return;
+  }
+  testFinished = true;
+  clearInterval(timerInterval);
+  showResult();
+}
+
+function showResult() {
+  document.getElementById('quizScreen').classList.add('hidden');
+  const resultScreen = document.getElementById('resultScreen');
+  resultScreen.classList.add('active');
+
+  let correct = 0, wrong = 0, empty = 0;
+  questions.forEach((q, i) => {
+    if (userAnswers[i] === null) empty++;
+    else if (userAnswers[i] === q.answer) correct++;
+    else wrong++;
+  });
+
+  const score = Math.round((correct / questions.length) * 100);
+  const nilaiAkhir = score;
+
+  // Animate score circle
+  const scoreCircle = document.getElementById('scoreCircle');
+  let currentDeg = 0;
+  const targetDeg = (score / 100) * 360;
+  const scoreEl = document.getElementById('finalScore');
+  let currentScore = 0;
+  
+  const animInterval = setInterval(() => {
+    currentDeg += 6;
+    currentScore = Math.round((currentDeg / 360) * score);
+    if (currentDeg >= targetDeg) {
+      currentDeg = targetDeg;
+      currentScore = score;
+      clearInterval(animInterval);
+    }
+    let color = score >= 80 ? '#10b981' : score >= 60 ? '#f59e0b' : '#ef4444';
+    scoreCircle.style.background = `conic-gradient(${color} ${currentDeg}deg, var(--bg-card) ${currentDeg}deg)`;
+    scoreEl.textContent = currentScore;
+  }, 20);
+
+  document.getElementById('benarCount').textContent = correct;
+  document.getElementById('salahCount').textContent = wrong;
+  document.getElementById('kosongCount').textContent = empty;
+  document.getElementById('nilaiAkhir').textContent = nilaiAkhir;
+
+  // Status
+  const statusText = document.getElementById('statusText');
+  const statusDesc = document.getElementById('statusDesc');
+  if (score >= 80) {
+    statusText.textContent = "🎉 LULUS - SANGAT BAIK";
+    statusText.style.color = "#10b981";
+    statusDesc.textContent = "Luar biasa! Kamu memiliki peluang besar lolos seleksi POLRI. Pertahankan!";
+  } else if (score >= 60) {
+    statusText.textContent = "✅ LULUS - CUKUP BAIK";
+    statusText.style.color = "#f59e0b";
+    statusDesc.textContent = "Kamu lulus ambang batas. Terus tingkatkan belajar untuk hasil lebih baik!";
+  } else {
+    statusText.textContent = "❌ BELUM LULUS";
+    statusText.style.color = "#ef4444";
+    statusDesc.textContent = "Jangan menyerah! Pelajari kembali materi dan coba lagi. Kamu pasti bisa!";
+  }
+
+  // Build review
+  buildReview();
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildReview(filter = 'all') {
+  const reviewContainer = document.getElementById('reviewContainer');
+  let html = '';
+  questions.forEach((q, i) => {
+    const ua = userAnswers[i];
+    let statusClass, statusLabel, itemClass, statusKey;
+    if (ua === null) {
+      statusClass = 'unanswered'; statusLabel = 'KOSONG'; itemClass = 'unanswered-item'; statusKey = 'unanswered';
+    } else if (ua === q.answer) {
+      statusClass = 'correct'; statusLabel = 'BENAR'; itemClass = 'correct-item'; statusKey = 'correct';
+    } else {
+      statusClass = 'wrong'; statusLabel = 'SALAH'; itemClass = 'wrong-item'; statusKey = 'wrong';
+    }
+    
+    if (filter !== 'all' && filter !== statusKey) return;
+
+    html += `
+      <div class="review-item ${itemClass}">
+        <div class="review-header">
+          <span class="review-qnum">Soal ${i + 1} • ${q.cat}</span>
+          <span class="review-status ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="review-text">${q.q}</div>
+        <div class="review-answer user">
+          <strong>✍️ Jawabanmu:</strong> ${ua === null ? '<em>Tidak dijawab</em>' : letters[ua] + '. ' + q.options[ua]}
+        </div>
+        <div class="review-answer correct-ans">
+          <strong>✓ Jawaban Benar:</strong> ${letters[q.answer]}. ${q.options[q.answer]}
+        </div>
+        <div class="review-answer explanation">
+          <strong>💡 Pembahasan:</strong> ${q.explanation}
+        </div>
+      </div>
+    `;
+  });
+  
+  if (!html) html = '<p style="text-align:center;color:var(--text-secondary);padding:40px;">Tidak ada soal dengan filter ini.</p>';
+  reviewContainer.innerHTML = html;
+}
+
+function filterReview(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildReview(filter);
+}
+
+function restartTest() {
+  currentIndex = 0;
+  userAnswers = new Array(questions.length).fill(null);
+  timeLeft = 60 * 60;
+  testFinished = false;
+  clearInterval(timerInterval);
+  const timerEl = document.getElementById('timer');
+  timerEl.textContent = '60:00';
+  timerEl.classList.remove('danger');
+  timerEl.classList.add('warning');
+  document.getElementById('resultScreen').classList.remove('active');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('reviewContainer').innerHTML = '';
+  buildNavGrid();
+  startTimer();
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
